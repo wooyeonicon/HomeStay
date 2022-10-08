@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="yh.recommend.dao.CommentDao">
+    <resultMap id="BaseResultMap" type="yh.recommend.entity.Comment">
+        <id column="comment_id" property="commentId"></id>
+        <result column="comments" property="comments"></result>
+        <result column="reply" property="reply"></result>
+        <result column="score" property="score"></result>
+        <result column="co_id" property="coId"></result>
+        <result column="ch_id" property="chId"></result>
+    </resultMap>
+    <insert id="insertComment">
+         insert into `comment`(comments,score,co_Id,ch_Id)
+        values (#{comments},#{score},#{coId},#{chId});
+    </insert>
+    <update id="updateComment">
+        update `comment` set reply = #{reply} where comment_id = #{commentId};
+    </update>
+    <select id="checkAll" resultMap="BaseResultMap">
+        select * from `comment` where ch_id = #{chId};
+    </select>
+</mapper>

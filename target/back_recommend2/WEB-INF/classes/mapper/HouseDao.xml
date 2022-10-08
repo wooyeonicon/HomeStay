@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="yh.recommend.dao.HouseDao">
+    <resultMap id="BaseResultMap" type="yh.recommend.entity.House">
+        <id column="house_id" property="houseId"></id>
+        <result column="picture" property="picture"></result>
+        <result column="price" property="price"></result>
+        <result column="number" property="number"></result>
+        <result column="numbered" property="numbered"></result>
+        <result column="information" property="information"></result>
+        <result column="housename" property="housename"></result>
+        <result column="address" property="address"></result>
+        <result column="label" property="label"></result>
+        <result column="hu_id" property="huId"></result>
+        <result column="score" property="score"></result>
+    </resultMap>
+    <insert id="insertHouse" >
+        insert into house(picture,price,number,information,housename,address,label,hu_id,score) values (#{picture},#{price},#{number},#{information},#{housename},#{address},#{label},#{huId},5.0);
+    </insert>
+    <delete id="deleteHouse">
+         delete from house where house_id = #{houseId};
+    </delete>
+    <update id="updatePrice">
+         update house set price = #{price} where housename = #{housename};
+    </update>
+    <update id="updatePicture">
+         update house set picture = #{picture} where housename = #{housename};
+    </update>
+    <select id="checkSelfHouse" resultMap="BaseResultMap">
+        select * from house where hu_id = #{huId};
+    </select>
+    <update id="updateNumbered">
+        update house set numbered = numbered + #{numbered} where housename = #{housename};
+    </update>
+    <update id="reduceNumbered">
+        update house set numbered = #{numbered} where housename = #{housename};
+    </update>
+    <select id="checkDimName" resultMap="BaseResultMap">
+        select * from house where housename like "%"#{housename}"%";
+    </select>
+    <select id="checkName" resultType="House">
+        select * from house where housename = #{housename};
+    </select>
+    <select id="checkId" resultType="House">
+        select * from house where house_id = #{houseId};
+    </select>
+
+    <select id="checkAllScore" resultMap="BaseResultMap">
+         select * from house order by score desc,price asc;
+    </select>
+
+    <select id="checkAllScores" resultMap="BaseResultMap">
+        select * from house where label like "%"#{label}"%";
+    </select>
+
+    <select id="checkHotelAndUser" resultType="House">
+        select h.*,u.username,u.phone from house h left join user u on h.hu_id = u.user_id where h.house_id = #{houseId};
+    </select>
+
+    <update id="updateHouseScore">
+        update house set score = #{score} where house_id = #{houseId};
+    </update>
+
+    <select id="recommendHotel" resultMap="BaseResultMap">
+        SELECT * FROM house WHERE address = #{address} AND label LIKE "%"#{label}"%" ORDER BY score DESC,price ASC;
+    </select>
+
+    <select id="recommendHotelPrice" resultMap="BaseResultMap">
+        SELECT * FROM house WHERE address = #{address} AND label LIKE "%"#{label}"%" ORDER BY score DESC,price DESC;
+    </select>
+
+    <select id="recommendHotelScore" resultMap="BaseResultMap">
+         SELECT * FROM house WHERE address = #{address} AND label LIKE "%"#{label}"%" ORDER BY price ASC,score DESC;
+    </select>
+
+    <select id="recommendHotelScorePrice" resultMap="BaseResultMap">
+        SELECT * FROM house WHERE address = #{address} AND label LIKE "%"#{label}"%" ORDER BY price DESC,score DESC;
+    </select>
+
+    <select id="randomHotel" resultMap="BaseResultMap">
+        SELECT * FROM `house` WHERE house_id >= (ROUND(((( SELECT MAX( house_id ) FROM `house`)-( SELECT MIN( house_id ) FROM `house`)) * RAND()),0) + ( SELECT MIN( house_id ) FROM `house`)) LIMIT 5;
+    </select>
+
+</mapper>

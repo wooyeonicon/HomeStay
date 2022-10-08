@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="yh.recommend.dao.HouseAndOrderAndCommentDao">
+    <resultMap id="BaseResultMap" type="yh.recommend.entity.HouseAndOrderAndComment">
+        <id column="house_id" property="houseId"></id>
+        <result column="picture" property="picture"></result>
+        <result column="price" property="price"></result>
+        <result column="number" property="number"></result>
+        <result column="numbered" property="numbered"></result>
+        <result column="information" property="information"></result>
+        <result column="housename" property="housename"></result>
+        <result column="address" property="address"></result>
+        <result column="label" property="label"></result>
+        <result column="hu_id" property="huId"></result>
+        <result column="score" property="score"></result>
+        <association property="order" javaType="yh.recommend.entity.Order">
+            <id column="order_id" property="orderId"></id>
+            <result column="nowtime" property="nowtime"></result>
+            <result column="checktime" property="checktime"></result>
+            <result column="leavetime" property="leavetime"></result>
+            <result column="state" property="state"></result>
+            <result column="oname" property="oname"></result>
+            <result column="onumber" property="onumber"></result>
+            <result column="priced" property="priced"></result>
+            <result column="ou_id" property="ouId"></result>
+            <result column="oh_id" property="ohId"></result>
+        </association>
+        <association property="comment" javaType="yh.recommend.entity.Comment">
+            <id column="comment_id" property="commentId"></id>
+            <result column="comments" property="comments"></result>
+            <result column="reply" property="reply"></result>
+            <result column="score" property="score"></result>
+            <result column="co_id" property="coId"></result>
+            <result column="ch_id" property="chId"></result>
+        </association>
+    </resultMap>
+
+    <select id="checkAllCommentsByHouseId" resultMap="BaseResultMap">
+        SELECT * FROM `house` h LEFT JOIN `order` o ON o.`oh_id` = h.`house_id` LEFT JOIN `comment` c ON o.`order_id` = c.`co_id` WHERE h.`house_id` = #{houseId} AND o.state = 1;
+    </select>
+
+</mapper>

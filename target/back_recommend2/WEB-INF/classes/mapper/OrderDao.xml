@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="yh.recommend.dao.OrderDao">
+    <resultMap id="BaseResultMap" type="yh.recommend.entity.Order">
+        <id column="order_id" property="orderId"></id>
+        <result column="nowtime" property="nowtime"></result>
+        <result column="checktime" property="checktime"></result>
+        <result column="leavetime" property="leavetime"></result>
+        <result column="state" property="state"></result>
+        <result column="oname" property="oname"></result>
+        <result column="onumber" property="onumber"></result>
+        <result column="priced" property="priced"></result>
+        <result column="ou_id" property="ouId"></result>
+        <result column="oh_id" property="ohId"></result>
+    </resultMap>
+    <insert id="insertOrder">
+        insert into `order`(nowtime,checktime,leavetime,oname,onumber,priced,ou_id,oh_id)
+        values (#{nowtime},#{checktime},#{leavetime},#{oname},#{onumber},#{priced},#{ouId},#{ohId});
+    </insert>
+    <update id="updateOrder">
+         update `order` set state = #{state} where order_id = #{orderId} and ou_id = #{ouId} and oh_id = #{ohId};
+    </update>
+    <select id="checkAllOrder" resultMap="BaseResultMap">
+        select * from `order` where ou_id = #{ouId};
+    </select>
+    <select id="checkEffective" resultMap="BaseResultMap">
+        select * from `order` where state = #{state} and ou_id = #{ouId};
+    </select>
+    <select id="checkOrder" resultType="Order">
+        select * from `order` where order_id = #{orderId};
+    </select>
+    <select id="checkCancel" resultMap="BaseResultMap">
+        select * from `order` where state = #{state};
+    </select>
+    <select id="checkEffectives" resultMap="BaseResultMap">
+        select * from `order` where 1 >= state and oh_id = #{ohId};
+    </select>
+
+    <select id="checkByState" resultMap="BaseResultMap">
+        select * from `order` where oh_id = #{ohId} and 1 >= state ;
+    </select>
+
+    <select id="CountsByState" resultType="java.lang.Integer">
+        select count(*) from `order` where oh_id = #{ohId} and state = 1;
+    </select>
+
+    <select id="CountByState" resultType="java.lang.Integer">
+        select count(*) from `order` where oh_id = #{ohId} and state = 0;
+    </select>
+
+    <select id="checkAllByHouseId">
+        select * from `order` where state=0 and oh_id = #{ohId};
+    </select>
+
+    <select id="checkAllByHouseIdAndState" resultMap="BaseResultMap">
+        select * from `order` where oh_id = #{ohId} and state = 1;
+    </select>
+
+    <select id="SumOrderByUserId" resultType="java.lang.Double">
+        SELECT IFNULL(SUM(priced),0.0) FROM `order` WHERE state=1 AND ou_id = #{ouId};
+    </select>
+
+    <select id="SumOrderByHouseId" resultType="java.lang.Double">
+        SELECT IFNULL(SUM(priced),0.0) FROM `order` WHERE state=1 AND oh_id = #{ohId};
+    </select>
+</mapper>
