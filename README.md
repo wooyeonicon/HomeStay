@@ -5,3 +5,5 @@
 ## 前端：vue 
 ## 后端：java
 ## 数据库:mysql+redis
+
+【前端文件】hotel-app
